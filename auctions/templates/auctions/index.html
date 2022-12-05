@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+{% block styling %}
+<style>
+.container-gio{
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 20px;
+    padding:20px;
+    justify-content: space-evenly;
+}
+</style>
+{% endblock styling %}
+{% block body %}
+    <div>
+        <div style="position:relative;top:0;padding:5px 10px;background-color:#eee;">
+            <div style="position:sticky;top:0;left:0;">
+                <h2>Active Listings</h2>
+                <a href="{% url 'auctions:add_listing' %}" class="btn btn-primary" style="position:absolute;top:0;right:0;display:grid;grid-template-columns: auto auto;column-gap: 3px;align-items:center;"><i class="fa-solid fa-circle-plus"></i>Add Listing</a>
+            </div>
+        </div>
+        <div class="container-gio">
+
+            {% for item in items %}
+                <div class="card" style="position:relative;top:10px;display:inline-block;max-width: 400px;max-height: 600px;">
+                    <img class="card-img-top" src="{{item.image.url}}" alt="{{item.name}}" style="width: 400px;"/>
+                    <div class="p-1 pb-5">
+                        <h3 class="card-title">{{item.name}}</h3>
+                        <p class="card-text">{{item.bid_startdate}} - {{item.bid_enddate}} • Base Price:{{item.baseprice}}$</p>
+                        <p >{{item.description}}</p>
+                    </div>
+                    <a href="{% url 'auctions:listing' item.id %}" class="btn-view-item mt-3" style="text-decoration:none;color:white;background-color:rgb(13,110,253);border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;text-align: center;padding:10px;display:inline-block;width:400px;position:absolute;bottom:0;left:0;">View Item</a>
+                </div>
+            {% empty %}
+                <h4>No items listed yet!</h4>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

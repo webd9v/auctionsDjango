@@ -1,0 +1,24 @@
+*{
+    box-sizing: border-box;
+}
+body div div a.a-cus{
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.5s;
+}
+body div div a.a-cus:hover{
+    transform: translateY(-2px);
+}
+
+.lpf{
+    padding:20px;
+    background-color: rgba(142, 139, 139, 0);
+    text-align: center;
+    margin-top: 40px;
+    border:1px solid #ddd;
+    background-color: rgba(255,255,255,0.7);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-items: space-between;
+}

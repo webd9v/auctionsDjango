@@ -1,0 +1,34 @@
+{% extends 'auctions/layout.html' %}
+{% block title %}Favorites{% endblock title %}
+{% block styling %}
+<style>
+    .container-gio{
+        display: grid;
+        grid-template-columns: auto auto;
+        column-gap: 20px;
+        padding:20px;
+        justify-content: space-evenly;
+    }
+</style>
+{% endblock styling %}
+{% block body %}
+<div>
+    <h1>Watched Items</h1>
+    <div class="container-gio">
+
+        {% for item in watchlist %}
+            <div class="card" style="position:relative;top:10px;display:inline-block;max-width: 400px;max-height: 600px;">
+                <img class="card-img-top" src="{{item.image.url}}" alt="{{item.name}}" style="width: 400px;"/>
+                <div class="p-1 pb-5">
+                    <h3 class="card-title">{{item.name}}</h3>
+                    <p class="card-text">{{item.bid_startdate}} - {{item.bid_enddate}} • Base Price:{{item.baseprice}}$</p>
+                    <p >{{item.description}}</p>
+                </div>
+                <a href="{% url 'auctions:listing' item.id %}" class="btn-view-item mt-3" style="text-decoration:none;color:white;background-color:rgb(13,110,253);border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;text-align: center;padding:10px;display:inline-block;width:400px;position:absolute;bottom:0;left:0;">View Item</a>
+            </div>
+        {% empty %}
+            <h4 class="bg-danger rounded text-white p-3">No items to display! Start Adding items to your watchlist to see them here!</h4>
+        {% endfor %}
+    </div>
+</div>
+{% endblock body %}

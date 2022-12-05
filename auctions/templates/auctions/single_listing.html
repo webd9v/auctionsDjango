@@ -1,0 +1,126 @@
+{% extends 'auctions/layout.html' %}
+{% block title %}{{item.name}}{% endblock title %}
+{% block styling %}
+<style>
+    ::selection{
+        background-color: green;
+    }
+    div.parent-listing{
+        position:relative;
+        top:10px;
+        /* background-color:rgba(0, 0, 0,0.125);
+        display:inline-block;
+        width:100%;
+        height:100%; */
+    }
+    .left-section{
+        display:inline-block;
+        width:200px;
+        max-width:200px;
+        height:100px;
+        max-height: 500px;
+        position:sticky;
+        margin-top:20px;
+        margin-left: 80%;
+    }
+    .center-section{
+        display:inline-block;
+        position:absolute;
+        top:20px;
+        left:20px;
+    }
+    .owner-says{
+        text-decoration: underline;
+        text-transform: capitalize;
+    }
+    
+</style>
+{% endblock styling %}
+{% block body %}
+<div>
+    <h1 style="margin-left:37%;">
+        Listing: {{item.name}}
+        {% if isFinished %}
+            (bidding on this item is closed!)
+        {% endif %}
+    </h1>
+</div>
+<div class="parent-listing container">
+    <div class="row">
+        <div class="col col-md-9">
+            <h3><span class="owner-says">{{item.user}} says: </span><i>{{item.description}}</i></h3>
+            {% if isWatched %}
+                <a href="{% url 'auctions:watch_item' item.id %}" class="btn btn-danger"><i class="fa-solid fa-circle-minus"></i> Remove From Watchlist</a>
+            {% else %}
+            <a href="{% url 'auctions:watch_item' item.id %}" class="btn btn-primary"><i class="fa-solid fa-circle-plus"></i> Add to Watchlist</a>
+            {% endif %}
+        </div>
+        <div class="col col-md-3">
+            <div class="card">
+                <img src="{{item.image.url}}" class="card-img-top" alt="{{item.name}}" style="width: 100.3%;"/>
+                <div class="card-body">
+                    <p class="card-text">Owner: {{item.user}}</p>
+                    <p class="card-text">Start Date: {{item.bid_startdate}}</p>
+                    <p class="card-text">End Date: {{item.bid_enddate}}</p>
+                    <p class="card-text">Starting Price: {{item.baseprice}}$</p>
+                    <p class="card-text">Category: {{item.category.name}}</p>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <h1>Bids:</h1>
+        {% for bid in bids %}
+            <div><p>{{bid.user.username}} placed a bid of {{bid.amount}}$ on {{bid.date_placed}}</p></div>
+        {% empty %}
+            {% if isFinished %}
+            <h3>No bids have been placed on this item</h3>
+            {% else %}
+            <h3>No Bids yet. Be the first one to add an offer!</h3>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <hr>
+    <div style="margin-top:20px;">
+        {% if isFinished %}
+        <h1>This item has been sold to {{item.highest_bidder.username}}</h1>
+        {% else %}
+        <h1>Add an Offer:</h1>
+        {% if bidmessage %}
+            <p style="display:inline-block;width:400px;height:auto;background-color:rgb(237, 51, 51);border-radius: 5px;padding:10px;color:white;">{{bidmessage}}</p>
+        {% endif %}
+        <form method="post" action="{% url 'auctions:add_bid' %}">
+            {% csrf_token %}
+            <div class="form-group m-3">
+                <label>Your Offer: </label><input class="form-control" type="number" name="amount"></label>
+            </div>
+            <input type="hidden" name="next" value="{{item.id}}"/>
+            <input class="btn btn-primary" type="submit" value="Add Bid">
+        </form>
+        {% endif %}
+    </div>
+    <hr>
+    <div style="margin-top:20px;">
+        <h1>Comments:</h1>
+        {% for comment in comments%}
+            <div><p><strong>{{comment.user.username}}:</strong> {{comment.content}}</p></div>
+        {% empty %}
+        <h3>No comments yet!</h3>
+        {% endfor %}
+    </div>
+    <hr>
+    <div style="margin-top: 20px;;">
+        <h1>Add a Comment:</h1>
+        <form method="post" action="{% url 'auctions:add_comment' %}">
+            {% csrf_token %}
+            <div class="form-group m-3">
+                <textarea class="form-control" name="content" placeholder="You comment..."></textarea>
+            </div>
+            <input type="hidden" name="next" value="{{item.id}}"/>
+            <input class="btn btn-primary" type="submit" value="Add Comment">
+        </form>
+    </div>
+</div>
+{% endblock body %}
